@@ -1,88 +1,96 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Loading...</title>
+<title>Loading...</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
+    body {
+        margin: 0;
+        min-height: 100vh;
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-            background: #111;
-            color: white;
+        background: #111;
+        color: white;
 
-            font-family: Arial, sans-serif;
-        }
+        font-family: Arial, sans-serif;
+    }
 
-        .container {
-            width: 85%;
-            max-width: 500px;
-            text-align: center;
-        }
+    .container {
+        width: 85%;
+        max-width: 500px;
+        text-align: center;
+    }
 
-        h2 {
-            margin-bottom: 12px;
-        }
+    h2 {
+        margin-bottom: 10px;
+    }
 
-        #status {
-            color: #aaa;
-            margin-bottom: 25px;
-        }
+    #status {
+        color: #aaa;
+        min-height: 24px;
+        margin-bottom: 25px;
+    }
 
-        .progress-container {
-            width: 100%;
-            height: 14px;
+    .progress-container {
+        width: 100%;
+        height: 14px;
 
-            background: #333;
+        background: #333;
 
-            border-radius: 20px;
-            overflow: hidden;
-        }
+        border-radius: 20px;
+        overflow: hidden;
+    }
 
-        .progress-bar {
-            width: 0%;
-            height: 100%;
+    .progress-bar {
+        width: 0%;
+        height: 100%;
 
-            background: white;
+        background: white;
 
-            border-radius: 20px;
+        border-radius: 20px;
 
-            transition: width 0.05s linear;
-        }
+        transition: width 0.12s ease-out;
+    }
 
-        #percent {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #aaa;
-        }
+    #percent {
+        margin-top: 12px;
+        color: #aaa;
+    }
 
-        #redirectCounter {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #555;
-        }
-    </style>
+    #counter {
+        margin-top: 28px;
+        font-size: 12px;
+        color: #555;
+    }
+
+    #debug {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #777;
+    }
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <h2 id="message">正在載入...</h2>
+    <h2 id="message">
+        正在初始化...
+    </h2>
 
     <div id="status">
-        正在建立連線...
+        請稍候...
     </div>
 
     <div class="progress-container">
@@ -96,30 +104,56 @@
         0%
     </div>
 
-    <div id="redirectCounter"></div>
+    <div id="counter"></div>
+
+    <div id="debug"></div>
 
 </div>
 
 
 <script>
 
+/* ==========================================
+   測試模式
+
+   true  = 最後不會真的 Rick Roll
+   false = 正式版，最後會跳 YouTube
+========================================== */
+
+const TEST_MODE = true;
+
+
+/* ==========================================
+   每次進入頁面隨機 10～15 個階段
+========================================== */
+
+const totalStages =
+    Math.floor(Math.random() * 6) + 10;
+
+let currentStage = 1;
+
+
+/* ==========================================
+   顯示文字
+========================================== */
+
 const messages = [
 
     "正在驗證 QR Code...",
     "正在建立安全連線...",
-    "正在確認裝置...",
-    "正在解析內容...",
-    "正在尋找伺服器...",
-    "正在同步資料...",
-    "正在驗證請求...",
-    "正在建立工作階段...",
-    "正在取得內容...",
+    "正在解析請求...",
     "正在連接伺服器...",
-    "伺服器回應中...",
-    "正在重新導向...",
-    "正在確認資料...",
-    "正在尋找備用節點...",
-    "正在切換伺服器..."
+    "正在確認裝置...",
+    "正在取得內容...",
+    "正在同步資料...",
+    "正在驗證工作階段...",
+    "正在尋找可用伺服器...",
+    "正在連接備用節點...",
+    "正在確認資料完整性...",
+    "正在重新建立連線...",
+    "正在處理請求...",
+    "正在取得遠端資料...",
+    "正在完成驗證..."
 
 ];
 
@@ -128,212 +162,261 @@ const statuses = [
 
     "請稍候...",
     "正在處理您的請求...",
-    "連線可能需要一些時間...",
     "請勿關閉此頁面...",
-    "正在取得最新資料...",
     "伺服器正在回應...",
-    "正在完成安全性檢查..."
+    "連線速度較慢...",
+    "正在等待遠端伺服器...",
+    "正在取得必要資料...",
+    "正在確認連線狀態...",
+    "正在等待回應...",
+    "系統正在處理..."
 
 ];
 
 
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
+const message =
+    document.getElementById("message");
 
-
-let count =
-    parseInt(
-        params.get("n") || "0"
-    );
-
-
-const maxRedirects = 50;
-
-
-/* -------------------------
-   隨機等待 300～500ms
--------------------------- */
-
-const delay =
-    Math.floor(
-        Math.random() * 201
-    ) + 300;
-
-
-/* -------------------------
-   隨機文字
--------------------------- */
-
-const randomMessage =
-    messages[
-        Math.floor(
-            Math.random() *
-            messages.length
-        )
-    ];
-
-
-const randomStatus =
-    statuses[
-        Math.floor(
-            Math.random() *
-            statuses.length
-        )
-    ];
-
-
-document.getElementById(
-    "message"
-).innerText = randomMessage;
-
-
-document.getElementById(
-    "status"
-).innerText = randomStatus;
-
-
-document.getElementById(
-    "redirectCounter"
-).innerText =
-    "Redirect " +
-    (count + 1) +
-    " / " +
-    maxRedirects;
-
-
-/* -------------------------
-   Loading Bar
--------------------------- */
+const status =
+    document.getElementById("status");
 
 const bar =
-    document.getElementById(
-        "progressBar"
-    );
+    document.getElementById("progressBar");
+
+const percent =
+    document.getElementById("percent");
+
+const counter =
+    document.getElementById("counter");
+
+const debug =
+    document.getElementById("debug");
 
 
-const percentText =
-    document.getElementById(
-        "percent"
-    );
+function randomItem(array) {
 
-
-const startTime =
-    Date.now();
-
-
-function updateProgress() {
-
-    const elapsed =
-        Date.now() - startTime;
-
-
-    let progress =
-        Math.min(
-            elapsed / delay,
-            1
-        );
-
-
-    /* 稍微讓載入速度看起來自然 */
-
-    const visualProgress =
-        Math.pow(
-            progress,
-            0.75
-        );
-
-
-    const percentage =
+    return array[
         Math.floor(
-            visualProgress * 100
+            Math.random() *
+            array.length
+        )
+    ];
+
+}
+
+
+function random(min, max) {
+
+    return Math.floor(
+        Math.random() *
+        (max - min + 1)
+    ) + min;
+
+}
+
+
+/* ==========================================
+   單一階段
+========================================== */
+
+async function runStage() {
+
+    message.innerText =
+        randomItem(messages);
+
+    status.innerText =
+        randomItem(statuses);
+
+    counter.innerText =
+        "Stage " +
+        currentStage +
+        " / " +
+        totalStages;
+
+
+    /* 每個新階段歸零 */
+
+    bar.style.width = "0%";
+    percent.innerText = "0%";
+
+
+    /* 建立不規則進度 */
+
+    let progress = 0;
+
+
+    while (progress < 100) {
+
+        /*
+            每次增加 4～18%
+
+            所以可能看起來像：
+
+            7
+            19
+            26
+            41
+            55
+            60
+            78
+            93
+            100
+        */
+
+        let increase =
+            random(4, 18);
+
+        progress += increase;
+
+
+        if (progress > 100) {
+            progress = 100;
+        }
+
+
+        bar.style.width =
+            progress + "%";
+
+        percent.innerText =
+            progress + "%";
+
+
+        /*
+            一般停頓：
+            100～300ms
+        */
+
+        let waitTime =
+            random(100, 300);
+
+
+        /*
+            有約 25% 機率突然卡一下
+        */
+
+        if (Math.random() < 0.25) {
+
+            waitTime =
+                random(400, 900);
+
+            status.innerText =
+                randomItem([
+                    "正在等待伺服器回應...",
+                    "連線速度較慢...",
+                    "正在重新嘗試...",
+                    "伺服器處理中...",
+                    "請稍候..."
+                ]);
+        }
+
+
+        await sleep(waitTime);
+    }
+
+
+    /*
+        到 100% 後再停一下
+    */
+
+    await sleep(
+        random(250, 650)
+    );
+
+
+    currentStage++;
+
+
+    if (currentStage <= totalStages) {
+
+        /*
+            下一個階段前
+            再稍微停一下
+        */
+
+        await sleep(
+            random(100, 350)
         );
 
+        runStage();
 
-    bar.style.width =
-        percentage + "%";
+    }
 
+    else {
 
-    percentText.innerText =
-        percentage + "%";
-
-
-    if (progress < 1) {
-
-        requestAnimationFrame(
-            updateProgress
-        );
+        finish();
 
     }
 
 }
 
 
-requestAnimationFrame(
-    updateProgress
-);
+/* ==========================================
+   結束
+========================================== */
+
+async function finish() {
+
+    message.innerText =
+        "載入完成";
+
+    status.innerText =
+        "正在開啟內容...";
+
+    bar.style.width =
+        "100%";
+
+    percent.innerText =
+        "100%";
+
+    counter.innerText =
+        totalStages +
+        " / " +
+        totalStages;
 
 
-/* -------------------------
-   重新導向
--------------------------- */
-
-setTimeout(function () {
-
-    if (
-        count <
-        maxRedirects - 1
-    ) {
-
-        const next =
-            count + 1;
+    await sleep(800);
 
 
-        window.location.replace(
-            window.location.pathname +
-            "?n=" +
-            next +
-            "&r=" +
-            Math.random()
-                .toString(36)
-                .substring(2, 8)
-        );
+    if (TEST_MODE) {
+
+        message.innerText =
+            "測試完成";
+
+        status.innerText =
+            "TEST_MODE 已啟用，因此沒有跳轉。";
+
+        debug.innerText =
+            "正式使用前把 TEST_MODE 改成 false";
 
     }
 
     else {
 
-        document.getElementById(
-            "message"
-        ).innerText =
-            "載入完成";
-
-
-        document.getElementById(
-            "status"
-        ).innerText =
-            "正在開啟內容...";
-
-
-        bar.style.width =
-            "100%";
-
-
-        percentText.innerText =
-            "100%";
-
-
-        setTimeout(function () {
-
-            window.location.href =
-                "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-
-        }, 500);
+        window.location.href =
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
     }
 
-}, delay);
+}
+
+
+/* ==========================================
+   sleep
+========================================== */
+
+function sleep(ms) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(resolve, ms)
+    );
+
+}
+
+
+/* 開始 */
+
+runStage();
 
 </script>
 
