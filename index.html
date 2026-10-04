@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Redirecting...</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            text-align: center;
+            padding-top: 30vh;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        p {
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2 id="message">正在載入...</h2>
+<p id="counter"></p>
+
+<script>
+
+const messages = [
+    "正在驗證 QR Code...",
+    "正在確認安全連線...",
+    "正在尋找伺服器...",
+    "伺服器沒有回應，正在重試...",
+    "正在切換備用伺服器...",
+    "正在驗證裝置...",
+    "正在取得內容...",
+    "內容已找到...",
+    "正在建立安全連線...",
+    "正在重新導向...",
+    "快好了...",
+    "正在開啟內容..."
+];
+
+const params = new URLSearchParams(window.location.search);
+
+let count = parseInt(params.get("n") || "0");
+
+const maxRedirects = 15;
+
+document.getElementById("message").innerText =
+    messages[count % messages.length];
+
+document.getElementById("counter").innerText =
+    "Redirect " + (count + 1) + " / " + maxRedirects;
+
+if (count < maxRedirects) {
+
+    setTimeout(function () {
+
+        window.location.replace(
+            window.location.pathname + "?n=" + (count + 1)
+        );
+
+    }, 550);
+
+} else {
+
+    document.getElementById("message").innerText =
+        "完成！正在開啟內容...";
+
+    setTimeout(function () {
+
+        window.location.href =
+            "https:" +
+            "//www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+    }, 1000);
+
+}
+
+</script>
+
+</body>
+</html>
