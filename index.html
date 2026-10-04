@@ -4,85 +4,336 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Redirecting...</title>
+    <title>Loading...</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
             background: #111;
             color: white;
+
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 500px;
             text-align: center;
-            padding-top: 30vh;
         }
 
         h2 {
-            font-size: 24px;
+            margin-bottom: 12px;
         }
 
-        p {
+        #status {
             color: #aaa;
+            margin-bottom: 25px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 14px;
+
+            background: #333;
+
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+
+            background: white;
+
+            border-radius: 20px;
+
+            transition: width 0.05s linear;
+        }
+
+        #percent {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        #redirectCounter {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #555;
         }
     </style>
 </head>
 
 <body>
 
-<h2 id="message">正在載入...</h2>
-<p id="counter"></p>
+<div class="container">
+
+    <h2 id="message">正在載入...</h2>
+
+    <div id="status">
+        正在建立連線...
+    </div>
+
+    <div class="progress-container">
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+    </div>
+
+    <div id="percent">
+        0%
+    </div>
+
+    <div id="redirectCounter"></div>
+
+</div>
+
 
 <script>
 
 const messages = [
+
     "正在驗證 QR Code...",
-    "正在確認安全連線...",
-    "正在尋找伺服器...",
-    "伺服器沒有回應，正在重試...",
-    "正在切換備用伺服器...",
-    "正在驗證裝置...",
-    "正在取得內容...",
-    "內容已找到...",
     "正在建立安全連線...",
+    "正在確認裝置...",
+    "正在解析內容...",
+    "正在尋找伺服器...",
+    "正在同步資料...",
+    "正在驗證請求...",
+    "正在建立工作階段...",
+    "正在取得內容...",
+    "正在連接伺服器...",
+    "伺服器回應中...",
     "正在重新導向...",
-    "快好了...",
-    "正在開啟內容..."
+    "正在確認資料...",
+    "正在尋找備用節點...",
+    "正在切換伺服器..."
+
 ];
 
-const params = new URLSearchParams(window.location.search);
 
-let count = parseInt(params.get("n") || "0");
+const statuses = [
 
-const maxRedirects = 15;
+    "請稍候...",
+    "正在處理您的請求...",
+    "連線可能需要一些時間...",
+    "請勿關閉此頁面...",
+    "正在取得最新資料...",
+    "伺服器正在回應...",
+    "正在完成安全性檢查..."
 
-document.getElementById("message").innerText =
-    messages[count % messages.length];
+];
 
-document.getElementById("counter").innerText =
-    "Redirect " + (count + 1) + " / " + maxRedirects;
 
-if (count < maxRedirects) {
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
 
-    setTimeout(function () {
 
-        window.location.replace(
-            window.location.pathname + "?n=" + (count + 1)
+let count =
+    parseInt(
+        params.get("n") || "0"
+    );
+
+
+const maxRedirects = 50;
+
+
+/* -------------------------
+   隨機等待 300～500ms
+-------------------------- */
+
+const delay =
+    Math.floor(
+        Math.random() * 201
+    ) + 300;
+
+
+/* -------------------------
+   隨機文字
+-------------------------- */
+
+const randomMessage =
+    messages[
+        Math.floor(
+            Math.random() *
+            messages.length
+        )
+    ];
+
+
+const randomStatus =
+    statuses[
+        Math.floor(
+            Math.random() *
+            statuses.length
+        )
+    ];
+
+
+document.getElementById(
+    "message"
+).innerText = randomMessage;
+
+
+document.getElementById(
+    "status"
+).innerText = randomStatus;
+
+
+document.getElementById(
+    "redirectCounter"
+).innerText =
+    "Redirect " +
+    (count + 1) +
+    " / " +
+    maxRedirects;
+
+
+/* -------------------------
+   Loading Bar
+-------------------------- */
+
+const bar =
+    document.getElementById(
+        "progressBar"
+    );
+
+
+const percentText =
+    document.getElementById(
+        "percent"
+    );
+
+
+const startTime =
+    Date.now();
+
+
+function updateProgress() {
+
+    const elapsed =
+        Date.now() - startTime;
+
+
+    let progress =
+        Math.min(
+            elapsed / delay,
+            1
         );
 
-    }, 550);
 
-} else {
+    /* 稍微讓載入速度看起來自然 */
 
-    document.getElementById("message").innerText =
-        "完成！正在開啟內容...";
+    const visualProgress =
+        Math.pow(
+            progress,
+            0.75
+        );
 
-    setTimeout(function () {
 
-        window.location.href =
-            "https:" +
-            "//www.youtube.com/watch?v=dQw4w9WgXcQ";
+    const percentage =
+        Math.floor(
+            visualProgress * 100
+        );
 
-    }, 1000);
+
+    bar.style.width =
+        percentage + "%";
+
+
+    percentText.innerText =
+        percentage + "%";
+
+
+    if (progress < 1) {
+
+        requestAnimationFrame(
+            updateProgress
+        );
+
+    }
 
 }
+
+
+requestAnimationFrame(
+    updateProgress
+);
+
+
+/* -------------------------
+   重新導向
+-------------------------- */
+
+setTimeout(function () {
+
+    if (
+        count <
+        maxRedirects - 1
+    ) {
+
+        const next =
+            count + 1;
+
+
+        window.location.replace(
+            window.location.pathname +
+            "?n=" +
+            next +
+            "&r=" +
+            Math.random()
+                .toString(36)
+                .substring(2, 8)
+        );
+
+    }
+
+    else {
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "載入完成";
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "正在開啟內容...";
+
+
+        bar.style.width =
+            "100%";
+
+
+        percentText.innerText =
+            "100%";
+
+
+        setTimeout(function () {
+
+            window.location.href =
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+        }, 500);
+
+    }
+
+}, delay);
 
 </script>
 
