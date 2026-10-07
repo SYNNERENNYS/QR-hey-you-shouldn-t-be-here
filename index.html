@@ -4,206 +4,1622 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Loading...</title>
+<title>Redirecting...</title>
 
 <style>
-    * {
-        box-sizing: border-box;
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#app {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.screen {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.small-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.muted {
+    opacity: 0.55;
+}
+
+
+/* =========================================================
+   PAGE TRANSITION
+========================================================= */
+
+#transitionOverlay {
+    position: fixed;
+    inset: 0;
+
+    background: #080808;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    z-index: 9999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.12s ease,
+        visibility 0.12s ease;
+}
+
+#transitionOverlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.transitionText {
+    margin-top: 22px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    opacity: 0.55;
+}
+
+
+/* Spinner */
+
+.icon-spinner {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 50%;
+
+    border:
+        4px solid
+        rgba(255,255,255,.15);
+
+    border-top-color: white;
+
+    animation:
+        spin .55s linear infinite;
+}
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
     }
 
-    body {
-        margin: 0;
-        min-height: 100vh;
+}
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
-        background: #111;
-        color: white;
+/* Dots */
 
-        font-family: Arial, sans-serif;
+.icon-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-dots span {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    animation:
+        dotPulse .65s infinite alternate;
+}
+
+.icon-dots span:nth-child(2) {
+    animation-delay: .13s;
+}
+
+.icon-dots span:nth-child(3) {
+    animation-delay: .26s;
+}
+
+@keyframes dotPulse {
+
+    from {
+        opacity: .2;
+        transform: translateY(0);
     }
 
-    .container {
-        width: 85%;
-        max-width: 500px;
+    to {
+        opacity: 1;
+        transform: translateY(-9px);
+    }
+
+}
+
+
+/* Squares */
+
+.icon-squares {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 15px);
+
+    gap: 5px;
+}
+
+.icon-squares span {
+    width: 15px;
+    height: 15px;
+
+    background: white;
+
+    animation:
+        squarePulse .8s infinite;
+}
+
+.icon-squares span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.icon-squares span:nth-child(3) {
+    animation-delay: .3s;
+}
+
+.icon-squares span:nth-child(4) {
+    animation-delay: .45s;
+}
+
+@keyframes squarePulse {
+
+    0%,
+    100% {
+        opacity: .15;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+
+/* =========================================================
+   01 CORPORATE
+========================================================= */
+
+.corporate-screen {
+    background: #edf2f7;
+
+    color: #18212b;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+.corp-header {
+    height: 70px;
+
+    background: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6vw;
+
+    border-bottom:
+        1px solid #d6dde5;
+}
+
+.corp-logo {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.corp-nav {
+    font-size: 12px;
+
+    color: #6e7883;
+}
+
+.corp-main {
+    min-height:
+        calc(100vh - 70px);
+
+    display: grid;
+    place-items: center;
+
+    padding: 35px 20px;
+}
+
+.corp-card {
+    width:
+        min(620px, 92vw);
+
+    background: white;
+
+    padding: 42px;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 16px 45px
+        rgba(20,35,50,.09);
+}
+
+.corp-status {
+    color: #3171e0;
+
+    font-weight: bold;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+}
+
+.corp-card h1 {
+    margin: 12px 0 4px;
+
+    font-size: 32px;
+}
+
+.corp-card h2 {
+    margin: 0;
+
+    font-size: 15px;
+
+    font-weight: normal;
+
+    color: #708090;
+}
+
+.segment-loader {
+    margin-top: 35px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(10, 1fr);
+
+    gap: 5px;
+}
+
+.segment-loader span {
+    height: 11px;
+
+    background: #e5eaf0;
+
+    border-radius: 3px;
+
+    transition:
+        background .16s;
+}
+
+.segment-loader span.active {
+    background: #3171e0;
+}
+
+.corp-bottom {
+    margin-top: 14px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 12px;
+
+    color: #7d8791;
+}
+
+
+/* =========================================================
+   02 TERMINAL
+========================================================= */
+
+.terminal-screen {
+    background: #030603;
+
+    color: #69ff81;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    padding: 5vw;
+
+    display: flex;
+    align-items: center;
+}
+
+.terminal-window {
+    width:
+        min(850px, 100%);
+
+    border:
+        1px solid #1b6f29;
+
+    box-shadow:
+        0 0 35px
+        rgba(0,255,70,.06);
+}
+
+.terminal-top {
+    padding: 10px 15px;
+
+    border-bottom:
+        1px solid #174f20;
+
+    font-size: 12px;
+}
+
+.terminal-body {
+    padding: 28px;
+
+    min-height: 380px;
+}
+
+.terminal-line {
+    margin: 8px 0;
+
+    opacity: .8;
+
+    font-size: 14px;
+}
+
+.terminal-title {
+    margin: 30px 0 20px;
+
+    font-size: 23px;
+}
+
+.ascii-progress {
+    margin-top: 25px;
+
+    white-space: pre;
+
+    font-size: 15px;
+}
+
+.terminal-cursor {
+    display: inline-block;
+
+    width: 8px;
+    height: 16px;
+
+    background: #69ff81;
+
+    margin-left: 5px;
+
+    animation:
+        cursorBlink .7s infinite;
+}
+
+@keyframes cursorBlink {
+
+    50% {
+        opacity: 0;
+    }
+
+}
+
+
+/* =========================================================
+   03 WARNING
+========================================================= */
+
+.warning-screen {
+    background: #f8c400;
+
+    color: #111;
+
+    font-family:
+        Impact,
+        "Arial Narrow",
+        sans-serif;
+
+    display: grid;
+
+    grid-template-columns:
+        33% 67%;
+
+    min-height: 100vh;
+}
+
+.warning-side {
+    background: #111;
+
+    color: #f8c400;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    writing-mode:
+        vertical-rl;
+
+    font-size:
+        clamp(34px, 6vw, 74px);
+
+    letter-spacing: 4px;
+}
+
+.warning-main {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 7vw;
+}
+
+.warning-code {
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 13px;
+
+    margin-bottom: 20px;
+}
+
+.warning-main h1 {
+    margin: 0;
+
+    font-size:
+        clamp(38px, 7vw, 80px);
+
+    line-height: .95;
+
+    text-transform: uppercase;
+}
+
+.warning-main h2 {
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 16px;
+
+    margin-top: 22px;
+
+    max-width: 450px;
+}
+
+.block-loader {
+    display: flex;
+
+    gap: 7px;
+
+    margin-top: 35px;
+}
+
+.block-loader span {
+    width: 28px;
+    height: 35px;
+
+    border:
+        3px solid #111;
+
+    transition:
+        background .1s;
+}
+
+.block-loader span.active {
+    background: #111;
+}
+
+
+/* =========================================================
+   04 GLASS
+========================================================= */
+
+.glass-screen {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            #845ef7,
+            #3f2b96 35%,
+            #0b1020 80%
+        );
+
+    color: white;
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    display: grid;
+    place-items: center;
+}
+
+.glass-card {
+    width:
+        min(560px, 88vw);
+
+    padding: 52px 35px;
+
+    border-radius: 30px;
+
+    text-align: center;
+
+    background:
+        rgba(255,255,255,.09);
+
+    border:
+        1px solid
+        rgba(255,255,255,.22);
+
+    backdrop-filter:
+        blur(18px);
+
+    box-shadow:
+        0 30px 70px
+        rgba(0,0,0,.28);
+}
+
+.glass-card h1 {
+    margin: 15px 0 4px;
+}
+
+.glass-card h2 {
+    font-size: 14px;
+
+    font-weight: normal;
+
+    opacity: .55;
+
+    margin: 0 0 28px;
+}
+
+.ring-loader {
+    width: 145px;
+    height: 145px;
+
+    margin: 25px auto;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            white var(--ringAngle),
+            rgba(255,255,255,.12) 0
+        );
+
+    display: grid;
+
+    place-items: center;
+}
+
+.ring-inner {
+    width: 118px;
+    height: 118px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(20,17,55,.92);
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   05 PAPER
+========================================================= */
+
+.paper-screen {
+    background: #d8cfbe;
+
+    color: #2d2923;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    min-height: 100vh;
+
+    padding: 50px 20px;
+
+    display: grid;
+
+    place-items: center;
+}
+
+.paper-document {
+    width:
+        min(720px, 92vw);
+
+    min-height: 580px;
+
+    background: #f9f3e7;
+
+    box-shadow:
+        10px 12px 0
+        rgba(70,60,45,.15);
+
+    padding: 55px;
+
+    border:
+        1px solid #c2b7a1;
+}
+
+.paper-id {
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+}
+
+.paper-document h1 {
+    font-weight: normal;
+
+    font-size: 32px;
+
+    margin: 45px 0 3px;
+}
+
+.paper-document h2 {
+    font-weight: normal;
+
+    font-size: 15px;
+
+    margin: 0;
+
+    opacity: .55;
+}
+
+.checklist {
+    margin-top: 40px;
+}
+
+.check-row {
+    display: flex;
+
+    align-items: center;
+
+    margin: 17px 0;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 13px;
+}
+
+.check-box {
+    width: 17px;
+    height: 17px;
+
+    border:
+        1px solid #5d5549;
+
+    margin-right: 12px;
+
+    display: grid;
+
+    place-items: center;
+}
+
+.check-row.done
+.check-box::after {
+    content: "✓";
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   06 DASHBOARD
+========================================================= */
+
+.dashboard-screen {
+    background: #10151b;
+
+    color: #e6edf3;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns:
+        230px 1fr;
+}
+
+.dash-sidebar {
+    background: #0a0e12;
+
+    padding: 35px 25px;
+
+    border-right:
+        1px solid #26303a;
+}
+
+.dash-logo {
+    font-size: 18px;
+    font-weight: bold;
+
+    margin-bottom: 50px;
+}
+
+.dash-menu div {
+    margin: 18px 0;
+
+    font-size: 12px;
+
+    color: #6e7984;
+}
+
+.active-menu {
+    color: #58a6ff !important;
+}
+
+.dash-content {
+    padding: 6vw;
+}
+
+.dash-content h1 {
+    font-size: 29px;
+
+    margin-bottom: 6px;
+}
+
+.dash-content h2 {
+    margin: 0;
+
+    font-size: 14px;
+
+    font-weight: normal;
+
+    color: #7d8790;
+}
+
+.node-grid {
+    margin-top: 45px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(150px,260px));
+
+    gap: 15px;
+}
+
+.node-card {
+    padding: 20px;
+
+    border:
+        1px solid #27313b;
+
+    background: #151b22;
+}
+
+.node-light {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #39424b;
+
+    margin-bottom: 15px;
+}
+
+.node-card.online
+.node-light {
+    background: #3fb950;
+
+    box-shadow:
+        0 0 10px
+        rgba(63,185,80,.5);
+}
+
+.node-name {
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+.node-state {
+    margin-top: 6px;
+
+    font-size: 11px;
+
+    color: #77818b;
+}
+
+
+/* =========================================================
+   07 ERROR
+========================================================= */
+
+.error-screen {
+    min-height: 100vh;
+
+    background: #fafafa;
+
+    color: #1d1d1d;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 8vw;
+}
+
+.error-code {
+    font-size:
+        clamp(110px, 22vw, 260px);
+
+    font-weight: 900;
+
+    line-height: .75;
+
+    color: #e9e9e9;
+
+    position: absolute;
+
+    right: 4vw;
+
+    z-index: 0;
+}
+
+.error-content {
+    width:
+        min(560px, 90vw);
+
+    position: relative;
+
+    z-index: 1;
+}
+
+.error-content h1 {
+    font-size:
+        clamp(35px, 6vw, 65px);
+
+    margin-bottom: 5px;
+}
+
+.error-content h2 {
+    font-size: 14px;
+
+    font-weight: normal;
+
+    color: #777;
+
+    margin-top: 0;
+}
+
+.reconnect-loader {
+    margin-top: 35px;
+
+    display: flex;
+
+    gap: 4px;
+
+    align-items: flex-end;
+
+    height: 45px;
+}
+
+.reconnect-loader span {
+    width: 8px;
+
+    background: #111;
+
+    opacity: .15;
+}
+
+.reconnect-loader span.active {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   08 MOBILE
+========================================================= */
+
+.mobile-screen {
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e8e3ff,
+            #d6f2ff
+        );
+
+    display: grid;
+
+    place-items: center;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    color: #332f45;
+}
+
+.phone {
+    width:
+        min(360px, 84vw);
+
+    height: 650px;
+
+    max-height: 86vh;
+
+    background: #fff;
+
+    border-radius: 36px;
+
+    padding: 17px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(50,40,90,.22);
+}
+
+.phone-screen {
+    height: 100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f9f8ff,
+            #fff
+        );
+
+    border-radius: 25px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 28px;
+}
+
+.phone-top {
+    font-size: 10px;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.app-icon {
+    width: 65px;
+    height: 65px;
+
+    border-radius: 20px;
+
+    margin:
+        auto auto 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #745cff,
+            #42b9ff
+        );
+
+    display: grid;
+
+    place-items: center;
+
+    color: white;
+
+    font-size: 28px;
+}
+
+.phone-message {
+    text-align: center;
+
+    margin-bottom: auto;
+}
+
+.phone-message h1 {
+    font-size: 22px;
+
+    margin-bottom: 5px;
+}
+
+.phone-message h2 {
+    font-size: 12px;
+
+    font-weight: normal;
+
+    opacity: .55;
+}
+
+.dot-loader {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin: 25px 0 55px;
+}
+
+.dot-loader span {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #d4d0e4;
+}
+
+.dot-loader span.active {
+    background: #6658d9;
+
+    transform:
+        scale(1.3);
+}
+
+
+/* =========================================================
+   09 AIRPORT
+========================================================= */
+
+.airport-screen {
+    min-height: 100vh;
+
+    background: #17202b;
+
+    color: #f0c933;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    padding: 5vw;
+}
+
+.airport-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding-bottom: 20px;
+
+    border-bottom:
+        3px solid #f0c933;
+
+    margin-bottom: 25px;
+}
+
+.airport-header h1 {
+    margin: 0;
+
+    font-family:
+        Arial,
+        sans-serif;
+}
+
+.airport-grid {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size:
+        clamp(12px,2vw,18px);
+}
+
+.airport-grid th {
+    color: #86929e;
+
+    text-align: left;
+
+    font-size: 10px;
+
+    padding: 12px;
+
+    border-bottom:
+        1px solid #394552;
+}
+
+.airport-grid td {
+    padding: 18px 12px;
+
+    border-bottom:
+        1px solid #303b46;
+}
+
+.flight-active {
+    background:
+        rgba(240,201,51,.08);
+}
+
+.airport-progress {
+    margin-top: 35px;
+
+    height: 6px;
+
+    background: #303b46;
+}
+
+.airport-progress div {
+    height: 100%;
+
+    width: 0;
+
+    background: #f0c933;
+
+    transition:
+        width .15s;
+}
+
+
+/* =========================================================
+   10 BIOS
+========================================================= */
+
+.bios-screen {
+    min-height: 100vh;
+
+    background: #0000aa;
+
+    color: white;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    padding: 35px;
+
+    font-size:
+        clamp(12px,2vw,16px);
+}
+
+.bios-title {
+    text-align: center;
+
+    margin-bottom: 35px;
+
+    font-size: 20px;
+}
+
+.bios-line {
+    margin: 8px 0;
+}
+
+.bios-spacer {
+    height: 35px;
+}
+
+.bios-progress {
+    margin-top: 25px;
+
+    white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   11 RADAR
+========================================================= */
+
+.radar-screen {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle,
+            #062516,
+            #020b06 70%
+        );
+
+    color: #46ff94;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    align-items: center;
+
+    padding: 6vw;
+}
+
+.radar-circle {
+    width:
+        min(420px,42vw);
+
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    border:
+        1px solid #197444;
+
+    position: relative;
+
+    background:
+
+        linear-gradient(
+            transparent 49.5%,
+            #17653d 50%,
+            transparent 50.5%
+        ),
+
+        linear-gradient(
+            90deg,
+            transparent 49.5%,
+            #17653d 50%,
+            transparent 50.5%
+        ),
+
+        radial-gradient(
+            circle,
+            transparent 24%,
+            #17653d 25%,
+            transparent 25.5%,
+            transparent 49%,
+            #17653d 50%,
+            transparent 50.5%,
+            transparent 74%,
+            #17653d 75%,
+            transparent 75.5%
+        );
+}
+
+.radar-beam {
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            rgba(70,255,148,.45),
+            transparent 18%
+        );
+
+    animation:
+        radarSpin 1.5s linear infinite;
+}
+
+@keyframes radarSpin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+.radar-info h1 {
+    font-size:
+        clamp(25px,4vw,50px);
+
+    margin-bottom: 5px;
+}
+
+.radar-info h2 {
+    font-weight: normal;
+
+    font-size: 14px;
+
+    opacity: .55;
+}
+
+.radar-percent {
+    margin-top: 35px;
+
+    font-size: 45px;
+}
+
+
+/* =========================================================
+   12 QUEUE
+========================================================= */
+
+.queue-screen {
+    min-height: 100vh;
+
+    background: #f7f7fb;
+
+    color: #25252d;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    padding: 6vw;
+}
+
+.queue-header {
+    max-width: 750px;
+}
+
+.queue-header h1 {
+    font-size:
+        clamp(30px,5vw,55px);
+
+    margin-bottom: 3px;
+}
+
+.queue-header h2 {
+    margin-top: 0;
+
+    font-size: 14px;
+
+    font-weight: normal;
+
+    color: #888;
+}
+
+.queue-cards {
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 45px;
+
+    overflow: hidden;
+}
+
+.queue-card {
+    min-width: 180px;
+
+    padding: 22px;
+
+    background: white;
+
+    border:
+        1px solid #e6e6ed;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 10px 25px
+        rgba(30,30,50,.05);
+
+    opacity: .3;
+}
+
+.queue-card.active {
+    opacity: 1;
+
+    border-color: #6c61e8;
+}
+
+.queue-card strong {
+    display: block;
+
+    margin-bottom: 10px;
+}
+
+.queue-meter {
+    margin-top: 45px;
+
+    height: 4px;
+
+    background: #e1e1e8;
+}
+
+.queue-meter div {
+    width: 0;
+
+    height: 100%;
+
+    background: #6c61e8;
+
+    transition:
+        width .15s;
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+.final-screen {
+    min-height: 100vh;
+
+    display: grid;
+
+    place-items: center;
+
+    text-align: center;
+
+    background: white;
+
+    color: #111;
+
+    font-family:
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+.final-screen h1 {
+    font-size:
+        clamp(35px,7vw,72px);
+
+    font-weight: 300;
+
+    margin: 0 0 10px;
+}
+
+.final-screen p {
+    color: #888;
+}
+
+
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .warning-screen {
+        grid-template-columns:
+            75px 1fr;
+    }
+
+    .dashboard-screen {
+        grid-template-columns:
+            1fr;
+    }
+
+    .dash-sidebar {
+        display: none;
+    }
+
+    .radar-screen {
+        grid-template-columns:
+            1fr;
+
         text-align: center;
+
+        gap: 30px;
     }
 
-    h2 {
-        margin-bottom: 10px;
+    .radar-circle {
+        width:
+            min(300px,75vw);
+
+        margin: auto;
     }
 
-    #status {
-        color: #aaa;
-        min-height: 24px;
-        margin-bottom: 25px;
+    .paper-document {
+        padding: 35px 27px;
     }
 
-    .progress-container {
-        width: 100%;
-        height: 14px;
-
-        background: #333;
-
-        border-radius: 20px;
-        overflow: hidden;
+    .queue-cards {
+        flex-direction: column;
     }
 
-    .progress-bar {
-        width: 0%;
-        height: 100%;
-
-        background: white;
-
-        border-radius: 20px;
-
-        transition: width 0.12s ease-out;
+    .queue-card {
+        min-width: auto;
     }
 
-    #percent {
-        margin-top: 12px;
-        color: #aaa;
-    }
+}
 
-    #counter {
-        margin-top: 28px;
-        font-size: 12px;
-        color: #555;
-    }
-
-    #debug {
-        margin-top: 20px;
-        font-size: 12px;
-        color: #777;
-    }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div id="app"></div>
 
-    <h2 id="message">
-        正在初始化...
-    </h2>
+<div id="transitionOverlay">
 
-    <div id="status">
-        請稍候...
+    <div id="transitionIcon"></div>
+
+    <div class="transitionText">
+        REDIRECTING
     </div>
-
-    <div class="progress-container">
-        <div
-            class="progress-bar"
-            id="progressBar">
-        </div>
-    </div>
-
-    <div id="percent">
-        0%
-    </div>
-
-    <div id="counter"></div>
-
-    <div id="debug"></div>
 
 </div>
 
 
 <script>
 
-/* ==========================================
-   測試模式
-
-   true  = 最後不會真的 Rick Roll
-   false = 正式版，最後會跳 YouTube
-========================================== */
+/* =========================================================
+   CONFIG
+========================================================= */
 
 const TEST_MODE = false;
 
 
-/* ==========================================
-   每次進入頁面隨機 10～15 個階段
-========================================== */
+/*
+每次 10～15 頁
+*/
 
-const totalStages =
-    Math.floor(Math.random() * 6) + 10;
-
-let currentStage = 1;
-
-
-/* ==========================================
-   顯示文字
-========================================== */
-
-const messages = [
-
-    "正在驗證 QR Code...",
-    "正在建立安全連線...",
-    "正在解析請求...",
-    "正在連接伺服器...",
-    "正在確認裝置...",
-    "正在取得內容...",
-    "正在同步資料...",
-    "正在驗證工作階段...",
-    "正在尋找可用伺服器...",
-    "正在連接備用節點...",
-    "正在確認資料完整性...",
-    "正在重新建立連線...",
-    "正在處理請求...",
-    "正在取得遠端資料...",
-    "正在完成驗證..."
-
-];
+const TOTAL_STAGES =
+    Math.floor(
+        Math.random() * 6
+    ) + 10;
 
 
-const statuses = [
+let currentStage = 0;
 
-    "請稍候...",
-    "正在處理您的請求...",
-    "請勿關閉此頁面...",
-    "伺服器正在回應...",
-    "連線速度較慢...",
-    "正在等待遠端伺服器...",
-    "正在取得必要資料...",
-    "正在確認連線狀態...",
-    "正在等待回應...",
-    "系統正在處理..."
+
+/* =========================================================
+   PAGE TYPES
+========================================================= */
+
+const pageTypes = [
+
+    "corporate",
+    "terminal",
+    "warning",
+    "glass",
+    "paper",
+    "dashboard",
+    "error",
+    "mobile",
+    "airport",
+    "bios",
+    "radar",
+    "queue"
 
 ];
 
 
-const message =
-    document.getElementById("message");
-
-const status =
-    document.getElementById("status");
-
-const bar =
-    document.getElementById("progressBar");
-
-const percent =
-    document.getElementById("percent");
-
-const counter =
-    document.getElementById("counter");
-
-const debug =
-    document.getElementById("debug");
+let pageQueue =
+    shuffle(pageTypes);
 
 
-function randomItem(array) {
-
-    return array[
-        Math.floor(
-            Math.random() *
-            array.length
-        )
-    ];
-
-}
-
+/* =========================================================
+   UTILITY
+========================================================= */
 
 function random(min, max) {
 
@@ -215,194 +1631,17 @@ function random(min, max) {
 }
 
 
-/* ==========================================
-   單一階段
-========================================== */
+function pick(array) {
 
-async function runStage() {
-
-    message.innerText =
-        randomItem(messages);
-
-    status.innerText =
-        randomItem(statuses);
-
-    counter.innerText =
-        "Stage " +
-        currentStage +
-        " / " +
-        totalStages;
-
-
-    /* 每個新階段歸零 */
-
-    bar.style.width = "0%";
-    percent.innerText = "0%";
-
-
-    /* 建立不規則進度 */
-
-    let progress = 0;
-
-
-    while (progress < 100) {
-
-        /*
-            每次增加 4～18%
-
-            所以可能看起來像：
-
-            7
-            19
-            26
-            41
-            55
-            60
-            78
-            93
-            100
-        */
-
-        let increase =
-            random(4, 18);
-
-        progress += increase;
-
-
-        if (progress > 100) {
-            progress = 100;
-        }
-
-
-        bar.style.width =
-            progress + "%";
-
-        percent.innerText =
-            progress + "%";
-
-
-        /*
-            一般停頓：
-            100～300ms
-        */
-
-        let waitTime =
-            random(100, 300);
-
-
-        /*
-            有約 25% 機率突然卡一下
-        */
-
-        if (Math.random() < 0.25) {
-
-            waitTime =
-                random(400, 900);
-
-            status.innerText =
-                randomItem([
-                    "正在等待伺服器回應...",
-                    "連線速度較慢...",
-                    "正在重新嘗試...",
-                    "伺服器處理中...",
-                    "請稍候..."
-                ]);
-        }
-
-
-        await sleep(waitTime);
-    }
-
-
-    /*
-        到 100% 後再停一下
-    */
-
-    await sleep(
-        random(250, 650)
-    );
-
-
-    currentStage++;
-
-
-    if (currentStage <= totalStages) {
-
-        /*
-            下一個階段前
-            再稍微停一下
-        */
-
-        await sleep(
-            random(100, 350)
-        );
-
-        runStage();
-
-    }
-
-    else {
-
-        finish();
-
-    }
+    return array[
+        Math.floor(
+            Math.random() *
+            array.length
+        )
+    ];
 
 }
 
-
-/* ==========================================
-   結束
-========================================== */
-
-async function finish() {
-
-    message.innerText =
-        "載入完成";
-
-    status.innerText =
-        "正在開啟內容...";
-
-    bar.style.width =
-        "100%";
-
-    percent.innerText =
-        "100%";
-
-    counter.innerText =
-        totalStages +
-        " / " +
-        totalStages;
-
-
-    await sleep(800);
-
-
-    if (TEST_MODE) {
-
-        message.innerText =
-            "測試完成";
-
-        status.innerText =
-            "TEST_MODE 已啟用，因此沒有跳轉。";
-
-        debug.innerText =
-            "正式使用前把 TEST_MODE 改成 false";
-
-    }
-
-    else {
-
-        window.location.href =
-            "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-
-    }
-
-}
-
-
-/* ==========================================
-   sleep
-========================================== */
 
 function sleep(ms) {
 
@@ -414,9 +1653,3010 @@ function sleep(ms) {
 }
 
 
-/* 開始 */
+function shuffle(array) {
 
-runStage();
+    const result =
+        [...array];
+
+
+    for (
+        let i =
+            result.length - 1;
+
+        i > 0;
+
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            result[i],
+            result[j]
+        ]
+        =
+        [
+            result[j],
+            result[i]
+        ];
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   ABSURDITY LEVEL
+========================================================= */
+
+/*
+0 = 正常
+1 = 微妙
+2 = 很怪
+3 = 完全失控
+*/
+
+function getAbsurdityLevel(stage) {
+
+    const ratio =
+        stage /
+        TOTAL_STAGES;
+
+
+    if (
+        ratio <= .25
+    ) {
+        return 0;
+    }
+
+
+    if (
+        ratio <= .50
+    ) {
+        return 1;
+    }
+
+
+    if (
+        ratio <= .78
+    ) {
+        return 2;
+    }
+
+
+    return 3;
+
+}
+
+
+/* =========================================================
+   FUNNY TEXT
+========================================================= */
+
+const funnyMessages = {
+
+
+0: [
+
+    {
+        cn:
+            "正在尋找可用伺服器",
+
+        en:
+            "Searching for available servers..."
+    },
+
+    {
+        cn:
+            "正在確認網路連線",
+
+        en:
+            "Checking network connection..."
+    },
+
+    {
+        cn:
+            "正在取得遠端資料",
+
+        en:
+            "Retrieving remote data..."
+    },
+
+    {
+        cn:
+            "正在重新導向",
+
+        en:
+            "Redirecting request..."
+    },
+
+    {
+        cn:
+            "正在確認目的地",
+
+        en:
+            "Resolving destination..."
+    }
+
+],
+
+
+1: [
+
+    {
+        cn:
+            "正在連接到馬鈴薯伺服器",
+
+        en:
+            "Connecting to potato server..."
+    },
+
+    {
+        cn:
+            "正在確認網路線有沒有插反",
+
+        en:
+            "Checking if the Ethernet cable is upside down..."
+    },
+
+    {
+        cn:
+            "正在詢問路由器今天心情如何",
+
+        en:
+            "Asking the router how it feels today..."
+    },
+
+    {
+        cn:
+            "正在尋找失蹤的 Wi-Fi",
+
+        en:
+            "Searching for missing Wi-Fi..."
+    },
+
+    {
+        cn:
+            "正在餵伺服器吃記憶體",
+
+        en:
+            "Feeding RAM to the server..."
+    },
+
+    {
+        cn:
+            "正在等待雲端飄過來",
+
+        en:
+            "Waiting for the cloud to arrive..."
+    }
+
+],
+
+
+2: [
+
+    {
+        cn:
+            "正在檢查設備是否為哀鳳",
+
+        en:
+            "Checking if this device is an iPhon't..."
+    },
+
+    {
+        cn:
+            "正在下載更多 RAM",
+
+        en:
+            "Downloading more RAM..."
+    },
+
+    {
+        cn:
+            "正在把封包丟過太平洋",
+
+        en:
+            "Throwing packets across the Pacific..."
+    },
+
+    {
+        cn:
+            "正在安撫情緒不穩定的 DNS",
+
+        en:
+            "Calming down an emotionally unstable DNS..."
+    },
+
+    {
+        cn:
+            "正在重新啟動整個網際網路",
+
+        en:
+            "Restarting the entire Internet..."
+    },
+
+    {
+        cn:
+            "正在確認伺服器不是烤麵包機",
+
+        en:
+            "Checking whether the server is actually a toaster..."
+    },
+
+    {
+        cn:
+            "正在用微波爐增強 Wi-Fi",
+
+        en:
+            "Boosting Wi-Fi with a microwave..."
+    }
+
+],
+
+
+3: [
+
+    {
+        cn:
+            "正在等待工程師午休回來",
+
+        en:
+            "Waiting for the engineer to return from lunch..."
+    },
+
+    {
+        cn:
+            "正在確認你為什麼還沒關掉這個頁面",
+
+        en:
+            "Checking why you haven't closed this page yet..."
+    },
+
+    {
+        cn:
+            "正在尋找鍵盤上的 Any Key",
+
+        en:
+            "Searching for the Any Key..."
+    },
+
+    {
+        cn:
+            "正在請一隻貓重啟伺服器",
+
+        en:
+            "Asking a cat to reboot the server..."
+    },
+
+    {
+        cn:
+            "正在計算這一切到底有沒有必要",
+
+        en:
+            "Calculating whether any of this is actually necessary..."
+    },
+
+    {
+        cn:
+            "正在向隔壁借一點網路",
+
+        en:
+            "Borrowing some Internet from next door..."
+    },
+
+    {
+        cn:
+            "正在確認你是不是還在等",
+
+        en:
+            "Checking if you're seriously still waiting..."
+    },
+
+    {
+        cn:
+            "正在尋找真正的內容，應該快了吧",
+
+        en:
+            "Looking for the actual content. Probably."
+    },
+
+    {
+        cn:
+            "伺服器說它今天不想上班",
+
+        en:
+            "The server says it doesn't feel like working today."
+    },
+
+    {
+        cn:
+            "我們也不知道為什麼還在載入",
+
+        en:
+            "We don't know why this is still loading either."
+    }
+
+]
+
+};
+
+
+/* =========================================================
+   TRANSITION
+========================================================= */
+
+async function transitionLoading() {
+
+    const overlay =
+        document.getElementById(
+            "transitionOverlay"
+        );
+
+
+    const holder =
+        document.getElementById(
+            "transitionIcon"
+        );
+
+
+    const type =
+        random(1,3);
+
+
+    if (
+        type === 1
+    ) {
+
+        holder.innerHTML =
+            `<div class="icon-spinner"></div>`;
+
+    }
+
+
+    else if (
+        type === 2
+    ) {
+
+        holder.innerHTML = `
+
+            <div class="icon-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        `;
+
+    }
+
+
+    else {
+
+        holder.innerHTML = `
+
+            <div class="icon-squares">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        `;
+
+    }
+
+
+    overlay.classList.add(
+        "active"
+    );
+
+
+    await sleep(
+        random(
+            250,
+            550
+        )
+    );
+
+
+    overlay.classList.remove(
+        "active"
+    );
+
+
+    await sleep(100);
+
+}
+
+
+/* =========================================================
+   PAGE BUILDER
+========================================================= */
+
+function buildPage(type) {
+
+
+/* CORPORATE */
+
+if (
+    type ===
+    "corporate"
+) {
+
+return `
+
+<div class="screen corporate-screen">
+
+<header class="corp-header">
+
+<div class="corp-logo">
+Nimbus Cloud
+</div>
+
+<div class="corp-nav">
+STATUS · SECURITY · NETWORK
+</div>
+
+</header>
+
+
+<main class="corp-main">
+
+<section class="corp-card">
+
+<div class="corp-status">
+CONNECTION SERVICE
+</div>
+
+
+<h1>
+正在建立安全連線
+</h1>
+
+<h2>
+Establishing secure connection
+</h2>
+
+
+<div class="segment-loader">
+
+${Array(10)
+    .fill("<span></span>")
+    .join("")}
+
+</div>
+
+
+<div class="corp-bottom">
+
+<span>
+Gateway verification
+</span>
+
+<span data-percent>
+0%
+</span>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+`;
+
+}
+
+
+/* TERMINAL */
+
+if (
+    type ===
+    "terminal"
+) {
+
+return `
+
+<div class="screen terminal-screen">
+
+<div class="terminal-window">
+
+<div class="terminal-top">
+secure-shell — node-04
+</div>
+
+
+<div class="terminal-body">
+
+<div class="terminal-line">
+&gt; initializing connection...
+</div>
+
+<div class="terminal-line">
+&gt; resolving target endpoint...
+</div>
+
+<div class="terminal-line">
+&gt; handshake accepted
+</div>
+
+
+<div class="terminal-title">
+
+正在取得遠端內容
+
+<br>
+
+<span class="muted">
+RETRIEVING REMOTE CONTENT
+</span>
+
+</div>
+
+
+<div
+class="ascii-progress"
+data-ascii
+>
+[....................] 0%
+</div>
+
+
+<div class="terminal-line">
+
+processing
+
+<span class="terminal-cursor"></span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* WARNING */
+
+if (
+    type ===
+    "warning"
+) {
+
+return `
+
+<div class="screen warning-screen">
+
+<aside class="warning-side">
+ROUTING
+</aside>
+
+
+<main class="warning-main">
+
+<div class="warning-code">
+NODE FAILURE / AUTO FAILOVER
+</div>
+
+
+<h1>
+正在切換<br>
+伺服器
+</h1>
+
+
+<h2>
+
+Switching server node
+
+<br><br>
+
+目前節點回應速度較慢，
+系統正在尋找其他路由。
+
+<br>
+
+Current node response is slow.
+Searching alternative route.
+
+</h2>
+
+
+<div class="block-loader">
+
+${Array(10)
+    .fill("<span></span>")
+    .join("")}
+
+</div>
+
+</main>
+
+</div>
+
+`;
+
+}
+
+
+/* GLASS */
+
+if (
+    type ===
+    "glass"
+) {
+
+return `
+
+<div class="screen glass-screen">
+
+<div class="glass-card">
+
+<div class="small-label">
+SESSION AUTHENTICATION
+</div>
+
+
+<h1>
+正在驗證請求
+</h1>
+
+<h2>
+Authenticating request
+</h2>
+
+
+<div
+class="ring-loader"
+data-ring
+style="--ringAngle:0deg;"
+>
+
+<div
+class="ring-inner"
+data-percent
+>
+0%
+</div>
+
+</div>
+
+
+<div class="muted">
+
+Creating secure temporary session
+
+<br>
+
+正在建立安全工作階段
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* PAPER */
+
+if (
+    type ===
+    "paper"
+) {
+
+return `
+
+<div class="screen paper-screen">
+
+<article class="paper-document">
+
+<div class="paper-id">
+REQUEST DOCUMENT // #${random(
+    100000,
+    999999
+)}
+</div>
+
+
+<h1>
+資料完整性檢查
+</h1>
+
+<h2>
+Data Integrity Verification
+</h2>
+
+
+<div class="checklist">
+
+<div class="check-row">
+<div class="check-box"></div>
+<span>Verify request signature</span>
+</div>
+
+<div class="check-row">
+<div class="check-box"></div>
+<span>Confirm source data</span>
+</div>
+
+<div class="check-row">
+<div class="check-box"></div>
+<span>Validate destination</span>
+</div>
+
+<div class="check-row">
+<div class="check-box"></div>
+<span>Prepare transfer session</span>
+</div>
+
+<div class="check-row">
+<div class="check-box"></div>
+<span>Complete verification</span>
+</div>
+
+</div>
+
+
+<div
+style="
+margin-top:45px;
+font-family:Arial,sans-serif;
+font-size:12px;
+"
+>
+
+Progress:
+
+<strong data-percent>
+0%
+</strong>
+
+</div>
+
+</article>
+
+</div>
+
+`;
+
+}
+
+
+/* DASHBOARD */
+
+if (
+    type ===
+    "dashboard"
+) {
+
+return `
+
+<div class="screen dashboard-screen">
+
+<aside class="dash-sidebar">
+
+<div class="dash-logo">
+NODEWATCH
+</div>
+
+
+<div class="dash-menu">
+
+<div>
+Overview
+</div>
+
+<div class="active-menu">
+Routing
+</div>
+
+<div>
+Sessions
+</div>
+
+<div>
+Security
+</div>
+
+</div>
+
+</aside>
+
+
+<main class="dash-content">
+
+<div class="small-label">
+GLOBAL NETWORK
+</div>
+
+
+<h1>
+正在尋找最佳節點
+</h1>
+
+<h2>
+Searching for the optimal network node
+</h2>
+
+
+<div class="node-grid">
+
+${[
+    "TPE-01",
+    "HKG-03",
+    "SIN-08",
+    "TYO-04"
+]
+.map(
+node => `
+
+<div class="node-card">
+
+<div class="node-light"></div>
+
+<div class="node-name">
+${node}
+</div>
+
+<div class="node-state">
+Waiting...
+</div>
+
+</div>
+
+`
+)
+.join("")}
+
+</div>
+
+
+<div
+style="
+margin-top:30px;
+color:#75808b;
+font-size:12px;
+"
+>
+
+Network scan
+
+<span data-percent>
+0%
+</span>
+
+</div>
+
+</main>
+
+</div>
+
+`;
+
+}
+
+
+/* ERROR */
+
+if (
+    type ===
+    "error"
+) {
+
+return `
+
+<div class="screen error-screen">
+
+<div class="error-code">
+502
+</div>
+
+
+<div class="error-content">
+
+<div class="small-label">
+CONNECTION INTERRUPTED
+</div>
+
+
+<h1>
+連線中斷
+</h1>
+
+
+<h2>
+
+Connection interrupted.
+Attempting automatic recovery.
+
+<br>
+
+系統正在自動重新建立連線。
+
+</h2>
+
+
+<div class="reconnect-loader">
+
+${Array.from(
+    {length:14},
+    (_,i) =>
+        `<span style="height:${
+            10 +
+            ((i * 17) % 35)
+        }px"></span>`
+).join("")}
+
+</div>
+
+
+<div
+style="
+margin-top:18px;
+font-size:12px;
+"
+data-percent
+>
+0%
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* MOBILE */
+
+if (
+    type ===
+    "mobile"
+) {
+
+return `
+
+<div class="screen mobile-screen">
+
+<div class="phone">
+
+<div class="phone-screen">
+
+<div class="phone-top">
+
+<span>
+09:41
+</span>
+
+<span>
+●●●
+</span>
+
+</div>
+
+
+<div class="app-icon">
+↗
+</div>
+
+
+<div class="phone-message">
+
+<h1>
+正在重新導向
+</h1>
+
+<h2>
+Redirecting request
+</h2>
+
+<p
+style="
+font-size:12px;
+opacity:.55;
+margin-top:20px;
+"
+>
+
+正在取得下一個目的地
+
+<br>
+
+Resolving next destination
+
+</p>
+
+</div>
+
+
+<div class="dot-loader">
+
+${Array(8)
+    .fill("<span></span>")
+    .join("")}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* AIRPORT */
+
+if (
+    type ===
+    "airport"
+) {
+
+return `
+
+<div class="screen airport-screen">
+
+<div class="airport-header">
+
+<h1>
+CONNECTION BOARD
+</h1>
+
+<div>
+TRANSFER STATUS
+</div>
+
+</div>
+
+
+<table class="airport-grid">
+
+<thead>
+
+<tr>
+
+<th>NODE</th>
+<th>DESTINATION</th>
+<th>STATUS</th>
+<th>LATENCY</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+<td>TPE</td>
+<td>Gateway 04</td>
+<td>COMPLETE</td>
+<td>21ms</td>
+</tr>
+
+<tr>
+<td>HKG</td>
+<td>Gateway 17</td>
+<td>COMPLETE</td>
+<td>34ms</td>
+</tr>
+
+<tr class="flight-active">
+<td>SIN</td>
+<td>Relay 02</td>
+<td>PROCESSING</td>
+<td>--</td>
+</tr>
+
+<tr>
+<td>TYO</td>
+<td>Destination</td>
+<td>WAITING</td>
+<td>--</td>
+</tr>
+
+</tbody>
+
+</table>
+
+
+<div class="airport-progress">
+<div></div>
+</div>
+
+
+<div
+style="
+margin-top:12px;
+font-size:12px;
+"
+>
+
+正在轉送資料 /
+Routing data
+
+<span data-percent>
+0%
+</span>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* BIOS */
+
+if (
+    type ===
+    "bios"
+) {
+
+return `
+
+<div class="screen bios-screen">
+
+<div class="bios-title">
+SecureLink BIOS v4.7.2
+</div>
+
+
+<div class="bios-line">
+Network Adapter .............. OK
+</div>
+
+<div class="bios-line">
+Secure Session ............... OK
+</div>
+
+<div class="bios-line">
+Destination Resolver ......... RUNNING
+</div>
+
+<div class="bios-line">
+Remote Endpoint .............. WAIT
+</div>
+
+
+<div class="bios-spacer"></div>
+
+
+<div>
+正在初始化重新導向服務
+</div>
+
+<div>
+Initializing redirect service
+</div>
+
+
+<div
+class="bios-progress"
+data-ascii
+>
+[....................] 0%
+</div>
+
+
+<div class="bios-spacer"></div>
+
+<div>
+DO NOT POWER OFF
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* RADAR */
+
+if (
+    type ===
+    "radar"
+) {
+
+return `
+
+<div class="screen radar-screen">
+
+<div class="radar-circle">
+
+<div class="radar-beam"></div>
+
+</div>
+
+
+<div class="radar-info">
+
+<div class="small-label">
+NODE DISCOVERY
+</div>
+
+
+<h1>
+搜尋遠端節點
+</h1>
+
+<h2>
+Scanning remote network nodes
+</h2>
+
+
+<div
+class="radar-percent"
+data-percent
+>
+0%
+</div>
+
+
+<div class="muted">
+ACTIVE NETWORK SCAN
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* QUEUE */
+
+return `
+
+<div class="screen queue-screen">
+
+<div class="queue-header">
+
+<div class="small-label">
+DISTRIBUTED DELIVERY SERVICE
+</div>
+
+
+<h1>
+正在準備內容
+</h1>
+
+<h2>
+Preparing remote content for delivery
+</h2>
+
+</div>
+
+
+<div class="queue-cards">
+
+<div class="queue-card">
+
+<strong>
+REQUEST
+</strong>
+
+Received
+
+</div>
+
+
+<div class="queue-card">
+
+<strong>
+VERIFY
+</strong>
+
+Pending
+
+</div>
+
+
+<div class="queue-card">
+
+<strong>
+ROUTE
+</strong>
+
+Pending
+
+</div>
+
+
+<div class="queue-card">
+
+<strong>
+DELIVER
+</strong>
+
+Pending
+
+</div>
+
+</div>
+
+
+<div class="queue-meter">
+
+<div></div>
+
+</div>
+
+
+<div
+style="
+margin-top:15px;
+font-size:12px;
+color:#888;
+"
+>
+
+Pipeline progress:
+
+<span data-percent>
+0%
+</span>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================================
+   APPLY FUNNY CONTENT
+========================================================= */
+
+function applyFunnyContent(
+    type,
+    stage
+) {
+
+    const level =
+        getAbsurdityLevel(
+            stage
+        );
+
+
+    const funny =
+        pick(
+            funnyMessages[level]
+        );
+
+
+/* CORPORATE */
+
+if (
+    type ===
+    "corporate"
+) {
+
+    const h1 =
+        document.querySelector(
+            ".corp-card h1"
+        );
+
+    const h2 =
+        document.querySelector(
+            ".corp-card h2"
+        );
+
+
+    h1.textContent =
+        funny.cn;
+
+    h2.textContent =
+        funny.en;
+
+
+    if (
+        level >= 2
+    ) {
+
+        document.querySelector(
+            ".corp-logo"
+        ).textContent =
+
+            level === 3
+
+            ? "Definitely Real Cloud™"
+
+            : "Potato Cloud";
+
+    }
+
+}
+
+
+/* TERMINAL */
+
+if (
+    type ===
+    "terminal"
+) {
+
+    const title =
+        document.querySelector(
+            ".terminal-title"
+        );
+
+
+    title.innerHTML =
+
+        funny.cn +
+
+        "<br><span class='muted'>" +
+
+        funny.en.toUpperCase() +
+
+        "</span>";
+
+
+    const lines =
+        document.querySelectorAll(
+            ".terminal-line"
+        );
+
+
+    if (
+        level === 1
+    ) {
+
+        lines[0].textContent =
+            "> locating potato-server-01...";
+
+        lines[1].textContent =
+            "> checking starch level...";
+
+        lines[2].textContent =
+            "> potato accepted";
+
+    }
+
+
+    if (
+        level === 2
+    ) {
+
+        lines[0].textContent =
+            "> downloading more RAM...";
+
+        lines[1].textContent =
+            "> RAM download: suspiciously successful";
+
+        lines[2].textContent =
+            "> nobody knows why";
+
+    }
+
+
+    if (
+        level === 3
+    ) {
+
+        lines[0].textContent =
+            "> engineer.exe not found";
+
+        lines[1].textContent =
+            "> asking cat for technical support...";
+
+        lines[2].textContent =
+            "> cat refused";
+
+    }
+
+}
+
+
+/* WARNING */
+
+if (
+    type ===
+    "warning"
+) {
+
+    const h1 =
+        document.querySelector(
+            ".warning-main h1"
+        );
+
+    const h2 =
+        document.querySelector(
+            ".warning-main h2"
+        );
+
+
+    h1.textContent =
+        funny.cn;
+
+
+    h2.innerHTML =
+
+        funny.en +
+
+        "<br><br>" +
+
+        (
+            level === 3
+
+            ? "Situation questionable. Continuing anyway."
+
+            : "Automatic recovery procedure in progress."
+        );
+
+}
+
+
+/* GLASS */
+
+if (
+    type ===
+    "glass"
+) {
+
+    document.querySelector(
+        ".glass-card h1"
+    ).textContent =
+        funny.cn;
+
+
+    document.querySelector(
+        ".glass-card h2"
+    ).textContent =
+        funny.en;
+
+}
+
+
+/* PAPER */
+
+if (
+    type ===
+    "paper"
+) {
+
+    document.querySelector(
+        ".paper-document h1"
+    ).textContent =
+        funny.cn;
+
+
+    document.querySelector(
+        ".paper-document h2"
+    ).textContent =
+        funny.en;
+
+
+    const labels =
+        document.querySelectorAll(
+            ".check-row span"
+        );
+
+
+    let texts;
+
+
+    if (
+        level === 0
+    ) {
+
+        texts = [
+
+            "Verify request signature",
+            "Confirm source data",
+            "Validate destination",
+            "Prepare transfer session",
+            "Complete verification"
+
+        ];
+
+    }
+
+
+    else if (
+        level === 1
+    ) {
+
+        texts = [
+
+            "Confirm QR code is square",
+            "Check network exists",
+            "Locate available server",
+            "Verify destination",
+            "Prepare transfer"
+
+        ];
+
+    }
+
+
+    else if (
+        level === 2
+    ) {
+
+        texts = [
+
+            "Confirm QR code is still square",
+            "Confirm device is not a calculator",
+            "Check Wi-Fi has not escaped",
+            "Measure user patience",
+            "Locate actual content"
+
+        ];
+
+    }
+
+
+    else {
+
+        texts = [
+
+            "Confirm user is still here",
+            "Ask router for emotional support",
+            "Find missing Internet",
+            "Question previous life choices",
+            "Maybe locate actual content"
+
+        ];
+
+    }
+
+
+    labels.forEach(
+        (el,i) => {
+
+            el.textContent =
+                texts[i];
+
+        }
+    );
+
+}
+
+
+/* DASHBOARD */
+
+if (
+    type ===
+    "dashboard"
+) {
+
+    document.querySelector(
+        ".dash-content h1"
+    ).textContent =
+        funny.cn;
+
+
+    document.querySelector(
+        ".dash-content h2"
+    ).textContent =
+        funny.en;
+
+
+    if (
+        level >= 2
+    ) {
+
+        const names = [
+
+            "POTATO-01",
+            "CAT-03",
+            "TOASTER-08",
+            "MOM-WIFI"
+
+        ];
+
+
+        document
+            .querySelectorAll(
+                ".node-name"
+            )
+            .forEach(
+                (el,i) => {
+
+                    el.textContent =
+                        names[i];
+
+                }
+            );
+
+    }
+
+}
+
+
+/* ERROR */
+
+if (
+    type ===
+    "error"
+) {
+
+    const h1 =
+        document.querySelector(
+            ".error-content h1"
+        );
+
+    const h2 =
+        document.querySelector(
+            ".error-content h2"
+        );
+
+
+    if (
+        level === 0
+    ) {
+
+        h1.textContent =
+            "連線中斷";
+
+    }
+
+
+    else if (
+        level === 1
+    ) {
+
+        h1.textContent =
+            "伺服器有點累";
+
+
+        h2.innerHTML =
+
+            "Server appears tired.<br>" +
+
+            "正在讓它休息一下。";
+
+    }
+
+
+    else if (
+        level === 2
+    ) {
+
+        h1.textContent =
+            "伺服器跑掉了";
+
+
+        h2.innerHTML =
+
+            "Server has escaped.<br>" +
+
+            "正在派人把它抓回來。";
+
+    }
+
+
+    else {
+
+        h1.textContent =
+            "我們把伺服器弄丟了";
+
+
+        h2.innerHTML =
+
+            "We lost the server.<br>" +
+
+            "This is slightly embarrassing.";
+
+    }
+
+}
+
+
+/* MOBILE */
+
+if (
+    type ===
+    "mobile"
+) {
+
+    const h1 =
+        document.querySelector(
+            ".phone-message h1"
+        );
+
+    const h2 =
+        document.querySelector(
+            ".phone-message h2"
+        );
+
+    const p =
+        document.querySelector(
+            ".phone-message p"
+        );
+
+
+    if (
+        level === 0
+    ) {
+
+        h1.textContent =
+            "正在確認設備";
+
+        h2.textContent =
+            "Checking device...";
+
+    }
+
+
+    else if (
+        level === 1
+    ) {
+
+        h1.textContent =
+            "正在檢查你的手機";
+
+        h2.textContent =
+            "Inspecting your device...";
+
+    }
+
+
+    else if (
+        level === 2
+    ) {
+
+        h1.textContent =
+            "設備判定：可能是哀鳳";
+
+        h2.textContent =
+            "Device detected: probably an iPhon't";
+
+
+        p.innerHTML =
+
+            "蘋果濃度正在計算中<br>" +
+
+            "Calculating Apple concentration...";
+
+    }
+
+
+    else {
+
+        h1.textContent =
+            "手機看起來還活著";
+
+        h2.textContent =
+            "Device appears to still be alive";
+
+
+        p.innerHTML =
+
+            "這已經算是好消息了<br>" +
+
+            "That's probably good news.";
+
+    }
+
+}
+
+
+/* AIRPORT */
+
+if (
+    type ===
+    "airport"
+) {
+
+    const rows =
+        document.querySelectorAll(
+            ".airport-grid tbody tr"
+        );
+
+
+    if (
+        level >= 1
+    ) {
+
+        let destinations;
+
+
+        if (
+            level === 1
+        ) {
+
+            destinations = [
+
+                "Potato Server",
+                "Cloud",
+                "Internet",
+                "Destination"
+
+            ];
+
+        }
+
+
+        else if (
+            level === 2
+        ) {
+
+            destinations = [
+
+                "Potato Server",
+                "Cat Network",
+                "Internet ???",
+                "Somewhere"
+
+            ];
+
+        }
+
+
+        else {
+
+            destinations = [
+
+                "Engineer Lunch",
+                "Missing Wi-Fi",
+                "???",
+                "Still Loading"
+
+            ];
+
+        }
+
+
+        rows.forEach(
+            (row,i) => {
+
+                const cells =
+                    row.querySelectorAll(
+                        "td"
+                    );
+
+
+                cells[1].textContent =
+                    destinations[i];
+
+            }
+        );
+
+    }
+
+}
+
+
+/* BIOS */
+
+if (
+    type ===
+    "bios"
+) {
+
+    const lines =
+        document.querySelectorAll(
+            ".bios-line"
+        );
+
+
+    let texts;
+
+
+    if (
+        level === 0
+    ) {
+
+        texts = [
+
+            "Network Adapter .............. OK",
+            "Secure Session ............... OK",
+            "Destination Resolver ......... RUNNING",
+            "Remote Endpoint .............. WAIT"
+
+        ];
+
+    }
+
+
+    else if (
+        level === 1
+    ) {
+
+        texts = [
+
+            "Network Adapter .............. OK",
+            "RAM ......................... PROBABLY",
+            "Potato ...................... DETECTED",
+            "Internet .................... SOMEWHERE"
+
+        ];
+
+    }
+
+
+    else if (
+        level === 2
+    ) {
+
+        texts = [
+
+            "CPU .......................... CONFUSED",
+            "RAM .......................... DOWNLOADING",
+            "CAT DRIVER ................... LOADED",
+            "INTERNET ..................... MISSING"
+
+        ];
+
+    }
+
+
+    else {
+
+        texts = [
+
+            "ENGINEER ..................... OFFLINE",
+            "SERVER ....................... ESCAPED",
+            "POTATO ....................... READY",
+            "COMMON SENSE ................. NOT FOUND"
+
+        ];
+
+    }
+
+
+    lines.forEach(
+        (el,i) => {
+
+            el.textContent =
+                texts[i];
+
+        }
+    );
+
+}
+
+
+/* RADAR */
+
+if (
+    type ===
+    "radar"
+) {
+
+    const h1 =
+        document.querySelector(
+            ".radar-info h1"
+        );
+
+    const h2 =
+        document.querySelector(
+            ".radar-info h2"
+        );
+
+
+    if (
+        level === 0
+    ) {
+
+        h1.textContent =
+            "搜尋遠端節點";
+
+        h2.textContent =
+            "Scanning remote network nodes";
+
+    }
+
+
+    else if (
+        level === 1
+    ) {
+
+        h1.textContent =
+            "正在掃描附近的 Wi-Fi";
+
+        h2.textContent =
+            "Scanning nearby Wi-Fi networks...";
+
+    }
+
+
+    else if (
+        level === 2
+    ) {
+
+        h1.textContent =
+            "偵測到可疑網路";
+
+        h2.textContent =
+            "Detected: FBI Surveillance Van";
+
+    }
+
+
+    else {
+
+        h1.textContent =
+            "找到隔壁老王的 Wi-Fi";
+
+        h2.textContent =
+            "Signal strength: suspiciously excellent";
+
+    }
+
+}
+
+
+/* QUEUE */
+
+if (
+    type ===
+    "queue"
+) {
+
+    document.querySelector(
+        ".queue-header h1"
+    ).textContent =
+        funny.cn;
+
+
+    document.querySelector(
+        ".queue-header h2"
+    ).textContent =
+        funny.en;
+
+
+    const labels =
+        document.querySelectorAll(
+            ".queue-card strong"
+        );
+
+
+    if (
+        level === 2
+    ) {
+
+        const text = [
+
+            "POTATO",
+            "RAM",
+            "WIFI",
+            "???"
+
+        ];
+
+
+        labels.forEach(
+            (el,i) => {
+
+                el.textContent =
+                    text[i];
+
+            }
+        );
+
+    }
+
+
+    if (
+        level === 3
+    ) {
+
+        const text = [
+
+            "WAIT",
+            "WAIT",
+            "STILL WAIT",
+            "WHY"
+
+        ];
+
+
+        labels.forEach(
+            (el,i) => {
+
+                el.textContent =
+                    text[i];
+
+            }
+        );
+
+    }
+
+}
+
+}
+
+
+/* =========================================================
+   UPDATE PROGRESS
+========================================================= */
+
+function updateProgress(
+    type,
+    progress
+) {
+
+
+document
+    .querySelectorAll(
+        "[data-percent]"
+    )
+    .forEach(
+        el => {
+
+            el.textContent =
+                progress +
+                "%";
+
+        }
+    );
+
+
+/* CORPORATE */
+
+if (
+    type ===
+    "corporate"
+) {
+
+    const segments =
+        document.querySelectorAll(
+            ".segment-loader span"
+        );
+
+
+    const active =
+        Math.ceil(
+            progress / 10
+        );
+
+
+    segments.forEach(
+        (segment,index) => {
+
+            segment.classList.toggle(
+                "active",
+                index < active
+            );
+
+        }
+    );
+
+}
+
+
+/* TERMINAL / BIOS */
+
+if (
+    type === "terminal" ||
+    type === "bios"
+) {
+
+    const ascii =
+        document.querySelector(
+            "[data-ascii]"
+        );
+
+
+    const length =
+        20;
+
+
+    const filled =
+        Math.floor(
+            progress /
+            100 *
+            length
+        );
+
+
+    ascii.textContent =
+
+        "[" +
+
+        "#".repeat(
+            filled
+        )
+
+        +
+
+        ".".repeat(
+            length -
+            filled
+        )
+
+        +
+
+        "] "
+
+        +
+
+        progress
+
+        +
+
+        "%";
+
+}
+
+
+/* WARNING */
+
+if (
+    type ===
+    "warning"
+) {
+
+    const blocks =
+        document.querySelectorAll(
+            ".block-loader span"
+        );
+
+
+    const active =
+        Math.ceil(
+            progress / 10
+        );
+
+
+    blocks.forEach(
+        (block,index) => {
+
+            block.classList.toggle(
+                "active",
+                index < active
+            );
+
+        }
+    );
+
+}
+
+
+/* GLASS */
+
+if (
+    type ===
+    "glass"
+) {
+
+    const ring =
+        document.querySelector(
+            "[data-ring]"
+        );
+
+
+    ring.style.setProperty(
+        "--ringAngle",
+        (
+            progress *
+            3.6
+        ) +
+        "deg"
+    );
+
+}
+
+
+/* PAPER */
+
+if (
+    type ===
+    "paper"
+) {
+
+    const rows =
+        document.querySelectorAll(
+            ".check-row"
+        );
+
+
+    rows.forEach(
+        (row,index) => {
+
+            row.classList.toggle(
+
+                "done",
+
+                progress >=
+                (
+                    (index + 1) *
+                    20
+                )
+
+            );
+
+        }
+    );
+
+}
+
+
+/* DASHBOARD */
+
+if (
+    type ===
+    "dashboard"
+) {
+
+    const cards =
+        document.querySelectorAll(
+            ".node-card"
+        );
+
+
+    cards.forEach(
+        (card,index) => {
+
+            const threshold =
+                (
+                    index +
+                    1
+                ) *
+                22;
+
+
+            if (
+                progress >=
+                threshold
+            ) {
+
+                card.classList.add(
+                    "online"
+                );
+
+
+                card.querySelector(
+                    ".node-state"
+                ).textContent =
+                    "ONLINE";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ERROR */
+
+if (
+    type ===
+    "error"
+) {
+
+    const bars =
+        document.querySelectorAll(
+            ".reconnect-loader span"
+        );
+
+
+    const active =
+        Math.floor(
+            progress /
+            100 *
+            bars.length
+        );
+
+
+    bars.forEach(
+        (bar,index) => {
+
+            bar.classList.toggle(
+
+                "active",
+
+                index <
+                active
+
+            );
+
+        }
+    );
+
+}
+
+
+/* MOBILE */
+
+if (
+    type ===
+    "mobile"
+) {
+
+    const dots =
+        document.querySelectorAll(
+            ".dot-loader span"
+        );
+
+
+    const active =
+        Math.floor(
+            progress /
+            100 *
+            dots.length
+        );
+
+
+    dots.forEach(
+        (dot,index) => {
+
+            dot.classList.toggle(
+
+                "active",
+
+                index <=
+                active
+
+            );
+
+        }
+    );
+
+}
+
+
+/* AIRPORT */
+
+if (
+    type ===
+    "airport"
+) {
+
+    document.querySelector(
+        ".airport-progress div"
+    ).style.width =
+        progress +
+        "%";
+
+}
+
+
+/* QUEUE */
+
+if (
+    type ===
+    "queue"
+) {
+
+    document.querySelector(
+        ".queue-meter div"
+    ).style.width =
+        progress +
+        "%";
+
+
+    const cards =
+        document.querySelectorAll(
+            ".queue-card"
+        );
+
+
+    cards.forEach(
+        (card,index) => {
+
+            card.classList.toggle(
+
+                "active",
+
+                progress >=
+                (
+                    index *
+                    25
+                )
+
+            );
+
+        }
+    );
+
+}
+
+}
+
+
+/* =========================================================
+   IRREGULAR PROGRESS
+========================================================= */
+
+async function runProgress(
+    type,
+    stage
+) {
+
+
+    let progress =
+        0;
+
+
+    while (
+        progress <
+        100
+    ) {
+
+
+        progress +=
+            random(
+                4,
+                15
+            );
+
+
+        if (
+            progress >
+            100
+        ) {
+
+            progress =
+                100;
+
+        }
+
+
+        /*
+        最後一頁故意卡 99%
+        */
+
+        if (
+            stage ===
+            TOTAL_STAGES &&
+            progress >= 96 &&
+            progress < 100
+        ) {
+
+            progress =
+                99;
+
+        }
+
+
+        updateProgress(
+            type,
+            progress
+        );
+
+
+        let delay =
+            random(
+                180,
+                430
+            );
+
+
+        /*
+        一般卡頓
+        */
+
+        if (
+            Math.random() <
+            .30
+        ) {
+
+            delay =
+                random(
+                    650,
+                    1350
+                );
+
+        }
+
+
+        /*
+        70～95 特別容易卡
+        */
+
+        if (
+            progress >
+            70 &&
+            progress <
+            96 &&
+            Math.random() <
+            .25
+        ) {
+
+            delay =
+                random(
+                    900,
+                    1700
+                );
+
+        }
+
+
+        /*
+        最後一頁 99%
+        故意多卡一下
+        */
+
+        if (
+            stage ===
+            TOTAL_STAGES &&
+            progress ===
+            99
+        ) {
+
+            await sleep(
+                random(
+                    1800,
+                    2800
+                )
+            );
+
+
+            progress =
+                100;
+
+
+            updateProgress(
+                type,
+                progress
+            );
+
+
+            break;
+
+        }
+
+
+        await sleep(
+            delay
+        );
+
+    }
+
+
+    await sleep(
+        random(
+            450,
+            850
+        )
+    );
+
+}
+
+
+/* =========================================================
+   NEXT PAGE
+========================================================= */
+
+function nextPageType() {
+
+
+    if (
+        pageQueue.length ===
+        0
+    ) {
+
+        pageQueue =
+            shuffle(
+                pageTypes
+            );
+
+    }
+
+
+    return pageQueue.shift();
+
+}
+
+
+/* =========================================================
+   RUN
+========================================================= */
+
+async function run() {
+
+
+    const app =
+        document.getElementById(
+            "app"
+        );
+
+
+    for (
+        currentStage = 1;
+
+        currentStage <=
+        TOTAL_STAGES;
+
+        currentStage++
+    ) {
+
+
+        if (
+            currentStage >
+            1
+        ) {
+
+            await transitionLoading();
+
+        }
+
+
+        const type =
+            nextPageType();
+
+
+        app.innerHTML =
+            buildPage(
+                type
+            );
+
+
+        applyFunnyContent(
+            type,
+            currentStage
+        );
+
+
+        updateProgress(
+            type,
+            0
+        );
+
+
+        await runProgress(
+            type,
+            currentStage
+        );
+
+    }
+
+
+    await finish();
+
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+async function finish() {
+
+
+    await transitionLoading();
+
+
+    const app =
+        document.getElementById(
+            "app"
+        );
+
+
+    app.innerHTML = `
+
+<div class="final-screen">
+
+<div>
+
+<div class="small-label">
+REQUEST COMPLETE
+</div>
+
+
+<h1>
+載入完成
+</h1>
+
+
+<p>
+Loading complete
+</p>
+
+
+<p>
+
+這次是真的。
+
+<br>
+
+No really, this time we mean it.
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+
+    await sleep(
+        1400
+    );
+
+
+    if (
+        TEST_MODE
+    ) {
+
+        app.innerHTML = `
+
+<div class="final-screen">
+
+<div>
+
+<div class="small-label">
+TEST MODE
+</div>
+
+
+<h1>
+測試完成
+</h1>
+
+
+<p>
+Test complete
+</p>
+
+
+<p>
+
+TEST_MODE = true
+
+<br><br>
+
+正式發布前改成 false
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+    }
+
+
+    else {
+
+        window.location.href =
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+    }
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+run();
 
 </script>
 
